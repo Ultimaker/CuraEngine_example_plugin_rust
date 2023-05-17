@@ -10,12 +10,3 @@ The project can be ran by executing the following command
 ```
 cargo run
 ```
-
-It will automatically perform the following steps: install the dependencies
-```
-cargo install
-```
-And compile the protobuf messages
-```
-cargo build
-```

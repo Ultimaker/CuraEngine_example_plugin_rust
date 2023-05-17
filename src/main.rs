@@ -1,17 +1,13 @@
 use tonic::{transport::Server, Request, Response, Status};
 
-use plugin::plugin_server::{Plugin, PluginServer};
-use plugin::{PluginRequest, PluginResponse};
+use curaengine_grpc_defintions::plugin_server::{Plugin, PluginServer};
+use curaengine_grpc_defintions::{PluginRequest, PluginResponse};
 
-use plugin::simplify_server::{Simplify, SimplifyServer};
-use plugin::{SimplifyRequest, SimplifyResponse};
+use curaengine_grpc_defintions::simplify_server::{Simplify, SimplifyServer};
+use curaengine_grpc_defintions::{SimplifyRequest, SimplifyResponse};
 
-use plugin::postprocess_server::{Postprocess, PostprocessServer};
-use plugin::{PostprocessRequest, PostprocessResponse};
-
-mod plugin {
-    tonic::include_proto!("cura.plugins.proto");
-}
+use curaengine_grpc_defintions::postprocess_server::{Postprocess, PostprocessServer};
+use curaengine_grpc_defintions::{PostprocessRequest, PostprocessResponse};
 
 #[derive(Default)]
 struct PluginServicer {}
