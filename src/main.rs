@@ -64,7 +64,7 @@ impl Postprocess for PostprocessServicer {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let address = "127.0.0.1:5555".parse()?;
+    let address = "[::]:5555".parse()?;
     let project_name = env!("CARGO_PKG_NAME");
     println!("{project_name} listening on {address}",);
 
