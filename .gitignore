@@ -9,3 +9,6 @@ target/
 *.pdb
 
 .DS_Store
+
+# Downloaded protobuf definitions
+curaengine_grpc_defintions
