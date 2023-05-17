@@ -6,6 +6,9 @@ use plugin::{PluginRequest, PluginResponse};
 use plugin::simplify_server::{Simplify, SimplifyServer};
 use plugin::{SimplifyRequest, SimplifyResponse};
 
+use plugin::postprocess_server::{Postprocess, PostprocessServer};
+use plugin::{PostprocessRequest, PostprocessResponse};
+
 mod plugin {
     tonic::include_proto!("cura.plugins.proto");
 }
@@ -22,7 +25,7 @@ impl Plugin for PluginServicer {
         println!("Got a request from {:?}", request.remote_addr());
         Result::Ok(Response::new(PluginResponse {
             plugin_hash: "1234567890".to_string(),
-            version: env!("CARGO_PKG_VERSION").to_string(),
+            version: "0.0.1".to_string(),
         }))
     }
 }
@@ -42,6 +45,23 @@ impl Simplify for SimplifyServicer {
     }
 }
 
+#[derive(Default)]
+struct PostprocessServicer {}
+
+#[tonic::async_trait]
+impl Postprocess for PostprocessServicer {
+    async fn postprocess(
+        &self,
+        request: Request<PostprocessRequest>,
+    ) -> Result<Response<PostprocessResponse>, Status> {
+        println!("Got a request from {:?}", request.remote_addr());
+        println!("gcode word: {}", request.into_inner().gcode_word);
+        Result::Ok(Response::new(PostprocessResponse {
+            gcode_word: "Hello World".to_string(),
+        }))
+    }
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let address = "127.0.0.1:5555".parse()?;
@@ -51,6 +71,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Server::builder()
         .add_service(PluginServer::new(PluginServicer::default()))
         .add_service(SimplifyServer::new(SimplifyServicer::default()))
+        .add_service(PostprocessServer::new(PostprocessServicer::default()))
         .serve(address)
         .await?;
 
