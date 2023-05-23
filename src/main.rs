@@ -1,41 +1,25 @@
 use tonic::{transport::Server, Request, Response, Status};
 
-use curaengine_grpc_defintions::plugin_server::{Plugin, PluginServer};
-use curaengine_grpc_defintions::{PluginRequest, PluginResponse};
+use curaengine_grpc_defintions::slots::simplify::v0::{
+    simplify_service_server::{SimplifyService, SimplifyServiceServer},
+    SimplifyServiceModifyRequest, SimplifyServiceModifyResponse,
+};
 
-use curaengine_grpc_defintions::simplify_server::{Simplify, SimplifyServer};
-use curaengine_grpc_defintions::{SimplifyRequest, SimplifyResponse};
-
-use curaengine_grpc_defintions::postprocess_server::{Postprocess, PostprocessServer};
-use curaengine_grpc_defintions::{PostprocessRequest, PostprocessResponse};
-
-#[derive(Default)]
-struct PluginServicer {}
-
-#[tonic::async_trait]
-impl Plugin for PluginServicer {
-    async fn identify(
-        &self,
-        request: Request<PluginRequest>,
-    ) -> Result<Response<PluginResponse>, Status> {
-        println!("Got a request from {:?}", request.remote_addr());
-        Result::Ok(Response::new(PluginResponse {
-            plugin_hash: "1234567890".to_string(),
-            version: "0.0.1".to_string(),
-        }))
-    }
-}
+use curaengine_grpc_defintions::slots::postprocess::v0::{
+    postprocess_service_server::{PostprocessService, PostprocessServiceServer},
+    PostprocessServiceModifyRequest, PostprocessServiceModifyResponse,
+};
 
 #[derive(Default)]
 struct SimplifyServicer {}
 
 #[tonic::async_trait]
-impl Simplify for SimplifyServicer {
-    async fn simplify(
+impl SimplifyService for SimplifyServicer {
+    async fn modify(
         &self,
-        request: Request<SimplifyRequest>,
-    ) -> Result<Response<SimplifyResponse>, Status> {
-        Result::Ok(Response::new(SimplifyResponse {
+        request: Request<SimplifyServiceModifyRequest>,
+    ) -> Result<Response<SimplifyServiceModifyResponse>, Status> {
+        Result::Ok(Response::new(SimplifyServiceModifyResponse {
             polygons: request.into_inner().polygons,
         }))
     }
@@ -45,15 +29,13 @@ impl Simplify for SimplifyServicer {
 struct PostprocessServicer {}
 
 #[tonic::async_trait]
-impl Postprocess for PostprocessServicer {
-    async fn postprocess(
+impl PostprocessService for PostprocessServicer {
+    async fn modify(
         &self,
-        request: Request<PostprocessRequest>,
-    ) -> Result<Response<PostprocessResponse>, Status> {
-        println!("Got a request from {:?}", request.remote_addr());
-        println!("gcode word: {}", request.into_inner().gcode_word);
-        Result::Ok(Response::new(PostprocessResponse {
-            gcode_word: "Hello World".to_string(),
+        request: Request<PostprocessServiceModifyRequest>,
+    ) -> Result<Response<PostprocessServiceModifyResponse>, Status> {
+        Result::Ok(Response::new(PostprocessServiceModifyResponse {
+            gcode_word: request.into_inner().gcode_word,
         }))
     }
 }
@@ -65,9 +47,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("{project_name} listening on {address}",);
 
     Server::builder()
-        .add_service(PluginServer::new(PluginServicer::default()))
-        .add_service(SimplifyServer::new(SimplifyServicer::default()))
-        .add_service(PostprocessServer::new(PostprocessServicer::default()))
+        .add_service(SimplifyServiceServer::new(SimplifyServicer::default()))
+        .add_service(PostprocessServiceServer::new(PostprocessServicer::default()))
         .serve(address)
         .await?;
 

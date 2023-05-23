@@ -8,4 +8,4 @@ edition = "2021"
 [dependencies]
 tonic = "0.9.2"
 tokio = { version = "1.28.1", features = ["macros", "rt-multi-thread"] }
-curaengine_grpc_defintions = { version = "0.0.1", git = "https://github.com/Ultimaker/curaengine_grpc_defintions.git" }
+curaengine_grpc_defintions = { version = "0.0.1", git = "https://github.com/Ultimaker/curaengine_grpc_defintions.git", rev="5e85606e1924428f1c527bcf240192f80355220a" }

@@ -103,8 +103,9 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 [[package]]
 name = "curaengine_grpc_defintions"
 version = "0.0.1"
-source = "git+https://github.com/Ultimaker/curaengine_grpc_defintions.git#cda247a242c0841bbe51545dabab6716da5d6c85"
+source = "git+https://github.com/Ultimaker/curaengine_grpc_defintions.git?rev=5e85606e1924428f1c527bcf240192f80355220a#5e85606e1924428f1c527bcf240192f80355220a"
 dependencies = [
+ "glob",
  "prost",
  "tonic",
  "tonic-build",
@@ -216,6 +217,12 @@ dependencies = [
  "libc",
  "wasi",
 ]
+
+[[package]]
+name = "glob"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
 
 [[package]]
 name = "h2"
